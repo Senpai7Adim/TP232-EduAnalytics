@@ -10,7 +10,15 @@ Ce projet est une application web d'analyse de données éducatives conçue pour
 *   **Thème choisi :** **Thème D (Établissement scolaire secondaire)**
 *   **Membres du Groupe :**
     *   KANA DJOWALE Durel Bright
-    *   LIENOU KAMGANG Stephy Laure
+    *   LIENOU KAMGANG Stephy Laure 
+    *  MAGAKOUONTCHOUAudreyArèle
+    *  TCHOMKEMWAMBESalomonMarcel
+    *  FOTSOFAMDLEEnzoBrayann
+    *  DJIATOGUEULEWOUELeslieSorelle
+    *  MBEGAEYEMETERuth
+    *  MELONGTSAWARosvel
+    *  NGUEAGHOKRYSDeHugo
+    *  IFOUFOPAAnge
 *   **Nom du Chef de Groupe (graine) :** `KANA DJOWALE DUREL BRIGHT LIENOU KAMGANG STEPHY LAURE`
 *   **Graine Numérique Générée (SHA-256) :** `3857731347` (reproductible, dérivée de la conversion déterministe du nom)
 *   **Taille de la Cohorte Générée :** 250 élèves
