@@ -1,0 +1,10 @@
+Flask>=3.1.0
+pandas>=2.2.3
+numpy>=2.2.0
+scikit-learn>=1.6.0
+scipy>=1.15.0
+plotly>=5.24.0
+statsmodels>=0.14.4
+Werkzeug>=3.1.0
+reportlab>=4.2.0
+kaleido>=0.2.1

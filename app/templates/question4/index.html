@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+{% from 'components/macros.html' import chart_card, page_header %}
+{% block title %}{{ t('q4_title') }}{% endblock %}
+
+{% block content %}
+{{ page_header(t('q4_title'), 'Classification: Scientific vs Literary orientation') }}
+
+<div class="alert alert-info card-rounded mb-4">
+  <i class="bi bi-trophy-fill"></i> Best Model: <strong>{{ best_model_name }}</strong>
+  — Accuracy {{ best.accuracy }}, F1 {{ best.f1 }}
+</div>
+
+<div class="card-rounded mb-4">
+    <h3>Model Comparison</h3>
+    <table class="data-table">
+        <thead><tr><th>Model</th><th>Accuracy</th><th>Precision</th><th>Recall</th><th>F1</th><th>CV F1</th></tr></thead>
+        <tbody>
+            {% for row in comparison %}
+            <tr class="{% if row.is_best %}table-best{% endif %}">
+                <td>{% if row.is_best %}<i class="bi bi-star-fill text-warning"></i> {% endif %}{{ row.model }}</td>
+                <td>{{ row.accuracy }}</td><td>{{ row.precision }}</td>
+                <td>{{ row.recall }}</td><td>{{ row.f1 }}</td><td>{{ row.cv_f1 }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<div class="chart-grid">
+    <div class="chart-span-6">{{ chart_card('Model Metrics', 'q4Compare', charts.comparison) }}</div>
+    <div class="chart-span-6">{{ chart_card('Confusion Matrix', 'q4CM', charts.confusion) }}</div>
+    {% if charts.roc %}<div class="chart-span-6">{{ chart_card('ROC Curve', 'q4ROC', charts.roc) }}</div>{% endif %}
+    {% if charts.feature_importance %}<div class="chart-span-6">{{ chart_card('Feature Importance', 'q4FI', charts.feature_importance) }}</div>{% endif %}
+</div>
+
+<div class="row g-4 mt-2">
+    <div class="col-lg-6">
+        <div class="card-rounded">
+            <h3><i class="bi bi-magic"></i> Orientation Predictor</h3>
+            <form method="post">
+                <div class="row g-3">
+                    <div class="col-4"><label class="form-label">Study Hours</label>
+                        <input type="number" name="study_hours" class="form-control" value="{{ form_data.study_hours if form_data else '18' }}" required></div>
+                    <div class="col-4"><label class="form-label">Attendance %</label>
+                        <input type="number" name="attendance" class="form-control" value="{{ form_data.attendance if form_data else '90' }}" required></div>
+                    <div class="col-4"><label class="form-label">Homework</label>
+                        <input type="number" name="homework_score" class="form-control" value="{{ form_data.homework_score if form_data else '75' }}" required></div>
+                </div>
+                <button type="submit" class="btn btn-primary mt-3 w-100">Predict Orientation</button>
+            </form>
+            {% if prediction and not prediction.error %}
+            <div class="orientation-result mt-4">
+                <div class="orientation-badge {{ prediction.prediction | lower }}">{{ prediction.prediction }}</div>
+                {% for orient, prob in prediction.probabilities.items() %}
+                <div class="prob-bar-row">
+                    <span>{{ orient }}</span>
+                    <div class="prob-track"><div class="prob-fill" style="width:{{ (prob*100)|round(1) }}%"></div></div>
+                    <span>{{ (prob*100)|round(1) }}%</span>
+                </div>
+                {% endfor %}
+                <p class="mt-3 small">{{ prediction.explanation }}</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="{{ url_for('static', filename='js/charts.js') }}"></script>
+{% endblock %}

@@ -1,0 +1,29 @@
+{% macro kpi_card(label, value, suffix='', icon='bi-graph-up', color='primary', animate=true) %}
+<div class="kpi-card card-rounded" data-animate="{{ 'true' if animate else 'false' }}">
+    <div class="kpi-icon kpi-icon-{{ color }}"><i class="bi {{ icon }}"></i></div>
+    <div class="kpi-body">
+        <span class="kpi-label">{{ label }}</span>
+        <span class="kpi-value" data-target="{{ value }}">{{ value }}{% if suffix %}<small>{{ suffix }}</small>{% endif %}</span>
+    </div>
+</div>
+{% endmacro %}
+
+{% macro chart_card(title, chart_id, chart_data, fullscreen=true) %}
+<div class="chart-card card-rounded">
+    <div class="chart-card-header">
+        <h3>{{ title }}</h3>
+        {% if fullscreen %}
+        <button class="btn-chart-action" data-fullscreen="{{ chart_id }}" title="Fullscreen"><i class="bi bi-arrows-fullscreen"></i></button>
+        {% endif %}
+        <button class="btn-chart-action" data-download="{{ chart_id }}" title="Download PNG"><i class="bi bi-download"></i></button>
+    </div>
+    <div id="{{ chart_id }}" class="plotly-chart" data-chart='{{ chart_data }}'></div>
+</div>
+{% endmacro %}
+
+{% macro page_header(title, subtitle='') %}
+<div class="page-header animate-in">
+    <h1>{{ title }}</h1>
+    {% if subtitle %}<p>{{ subtitle }}</p>{% endif %}
+</div>
+{% endmacro %}

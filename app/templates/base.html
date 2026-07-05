@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="{{ settings.language }}" data-bs-theme="{{ settings.theme }}" data-animations="{{ 'true' if settings.animations else 'false' }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{{ app_name }}{% endblock %} | {{ course_code }}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/main.css') }}" rel="stylesheet">
+    {% block extra_head %}{% endblock %}
+</head>
+<body class="app-body">
+    <div class="app-layout" id="appLayout">
+        {% include 'components/sidebar.html' %}
+        <div class="app-main" id="appMain">
+            {% include 'components/topbar.html' %}
+            <main class="content-area">
+                {% include 'components/flash.html' %}
+                {% block content %}{% endblock %}
+            </main>
+        </div>
+    </div>
+    <div id="toastContainer" class="toast-container position-fixed bottom-0 end-0 p-3"></div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
+    <script>
+        window.APP_CONFIG = {
+            version: "{{ app_version }}",
+            animations: {{ 'true' if settings.animations else 'false' }},
+            language: "{{ settings.language }}",
+            theme: "{{ settings.theme }}"
+        };
+    </script>
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+    {% block extra_scripts %}{% endblock %}
+</body>
+</html>

@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% from 'components/macros.html' import chart_card, page_header %}
+{% block title %}{{ t('q1_title') }}{% endblock %}
+
+{% block content %}
+{{ page_header(t('q1_title'), 'Descriptive analysis of Exam_Score') }}
+
+<div class="chart-grid">
+    <div class="chart-span-6">{{ chart_card('Histogram', 'q1Hist', charts.histogram) }}</div>
+    <div class="chart-span-6">{{ chart_card('Box Plot', 'q1Box', charts.boxplot) }}</div>
+    <div class="chart-span-6">{{ chart_card('Violin Plot', 'q1Violin', charts.violin) }}</div>
+    <div class="chart-span-6">{{ chart_card('Density Curve', 'q1Density', charts.density) }}</div>
+</div>
+
+<div class="card-rounded mt-4">
+    <h3><i class="bi bi-table"></i> Statistical Summary</h3>
+    <div class="table-responsive">
+        <table class="data-table">
+            <thead><tr><th>Metric</th><th>Value</th></tr></thead>
+            <tbody>
+                {% for row in table_rows %}
+                <tr><td>{{ row.metric }}</td><td><strong>{{ row.value }}</strong></td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="explanation-grid mt-4">
+    <div class="explanation-card card-rounded">
+        <h4><i class="bi bi-bullseye"></i> Central Tendency</h4>
+        <p>{{ explanation.central_tendency }}</p>
+    </div>
+    <div class="explanation-card card-rounded">
+        <h4><i class="bi bi-arrows-expand"></i> Spread</h4>
+        <p>{{ explanation.spread }}</p>
+    </div>
+    <div class="explanation-card card-rounded">
+        <h4><i class="bi bi-graph-up"></i> Distribution Shape</h4>
+        <p>{{ explanation.distribution_shape }}</p>
+        <p class="small text-muted">{{ explanation.kurtosis_note }}</p>
+    </div>
+    <div class="explanation-card card-rounded">
+        <h4><i class="bi bi-exclamation-triangle"></i> Outliers</h4>
+        <p>{{ explanation.outliers }}</p>
+    </div>
+    <div class="explanation-card card-rounded span-2">
+        <h4><i class="bi bi-mortarboard"></i> Educational Interpretation</h4>
+        <p>{{ explanation.educational_interpretation }}</p>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="{{ url_for('static', filename='js/charts.js') }}"></script>
+{% endblock %}

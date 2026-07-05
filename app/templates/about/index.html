@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% from 'components/macros.html' import page_header %}
+{% block title %}{{ t('about_title') }}{% endblock %}
+
+{% block content %}
+{{ page_header(t('about_title'), course_code ~ ' — Theme ' ~ theme_label) }}
+
+<div class="about-grid">
+    <div class="card-rounded">
+        <h3><i class="bi bi-database"></i> Dataset Generation Algorithm</h3>
+        <p>The platform derives a deterministic seed from the group leader's full name using SHA-256 hashing. Data is generated through a causal chain: <strong>Study Hours → Attendance → Homework Score → Exam Score</strong>, each step positively influenced by the previous with small Gaussian noise.</p>
+        <p><strong>Orientation</strong> is never random. It is computed as a weighted academic index — Exam Score (60%), Homework Score (25%), Attendance (15%) — with students at or above the cohort median classified as <em>Scientific</em> and below as <em>Literary</em>.</p>
+    </div>
+    <div class="card-rounded">
+        <h3><i class="bi bi-bar-chart"></i> Statistics Concepts</h3>
+        <p><strong>Question 1</strong> applies descriptive statistics: mean, median, mode, variance, quartiles, skewness, kurtosis, and IQR-based outlier detection.</p>
+        <p><strong>Question 2</strong> uses Pearson/Spearman correlation and multiple linear regression with R² evaluation.</p>
+    </div>
+    <div class="card-rounded">
+        <h3><i class="bi bi-diagram-3"></i> Machine Learning</h3>
+        <p><strong>Question 3:</strong> K-Means clustering with elbow method and silhouette score for optimal K selection.</p>
+        <p><strong>Question 4:</strong> Decision Tree, Random Forest, KNN, and Logistic Regression compared via accuracy, precision, recall, and F1.</p>
+    </div>
+    <div class="card-rounded">
+        <h3><i class="bi bi-layers"></i> Project Architecture</h3>
+        <ul>
+            <li><strong>Blueprints</strong> — Modular route handlers per feature</li>
+            <li><strong>Services</strong> — Business logic separated from UI</li>
+            <li><strong>Utils</strong> — Charts, i18n, shared helpers</li>
+            <li><strong>Storage</strong> — CSV datasets, PDF/PNG exports</li>
+        </ul>
+    </div>
+    <div class="card-rounded span-2">
+        <h3><i class="bi bi-stack"></i> Technologies</h3>
+        <div class="tech-badges">
+            <span>Python 3.12+</span><span>Flask</span><span>Pandas</span><span>NumPy</span>
+            <span>scikit-learn</span><span>SciPy</span><span>Plotly</span><span>Bootstrap 5</span>
+            <span>ReportLab</span><span>Jinja2</span>
+        </div>
+    </div>
+</div>
+{% endblock %}

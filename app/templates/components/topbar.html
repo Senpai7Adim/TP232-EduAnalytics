@@ -1,0 +1,26 @@
+<header class="topbar glass-panel">
+    <button class="topbar-toggle d-lg-none" id="mobileSidebarToggle"><i class="bi bi-list"></i></button>
+    <div class="search-bar">
+        <i class="bi bi-search"></i>
+        <input type="search" id="globalSearch" placeholder="{{ t('search_placeholder') }}" autocomplete="off">
+        <div class="search-results" id="searchResults"></div>
+    </div>
+    <div class="topbar-actions">
+        <span class="version-badge">v{{ app_version }}</span>
+        <button class="topbar-btn" id="themeToggle" title="Toggle theme"><i class="bi bi-moon-stars-fill"></i></button>
+        <div class="dropdown">
+            <button class="topbar-btn" data-bs-toggle="dropdown"><i class="bi bi-bell-fill"></i><span class="notif-dot"></span></button>
+            <ul class="dropdown-menu dropdown-menu-end">
+                <li><h6 class="dropdown-header">Notifications</h6></li>
+                {% if has_dataset %}
+                <li><span class="dropdown-item-text small">Dataset loaded: {{ session_meta.num_students }} students</span></li>
+                {% else %}
+                <li><span class="dropdown-item-text small">Generate a dataset to begin analysis</span></li>
+                {% endif %}
+            </ul>
+        </div>
+        <div class="user-avatar" title="{{ session_meta.leader_name or 'Analyst' }}">
+            <span>{{ (session_meta.leader_name or 'A')[:1] | upper }}</span>
+        </div>
+    </div>
+</header>

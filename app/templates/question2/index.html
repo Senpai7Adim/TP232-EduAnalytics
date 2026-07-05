@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+{% from 'components/macros.html' import chart_card, page_header %}
+{% block title %}{{ t('q2_title') }}{% endblock %}
+
+{% block content %}
+{{ page_header(t('q2_title'), 'Regression, correlation, and prediction simulator') }}
+
+<div class="card-rounded mb-4">
+    <h3>Regression Equation</h3>
+    <code class="equation-block">{{ regression.equation }}</code>
+    <div class="metric-row mt-3">
+        <span class="metric-pill">R² = {{ regression.r_squared }}</span>
+        <span class="metric-pill">Adj. R² = {{ regression.adjusted_r_squared }}</span>
+    </div>
+    <p class="mt-3">{{ explanation }}</p>
+</div>
+
+<div class="chart-grid">
+    <div class="chart-span-4">{{ chart_card('Study Hours vs Score', 'q2Scatter1', charts.scatter_study) }}</div>
+    <div class="chart-span-4">{{ chart_card('Attendance vs Score', 'q2Scatter2', charts.scatter_attendance) }}</div>
+    <div class="chart-span-4">{{ chart_card('Homework vs Score', 'q2Scatter3', charts.scatter_homework) }}</div>
+    <div class="chart-span-6">{{ chart_card('Correlation Matrix', 'q2Corr', charts.correlation) }}</div>
+    <div class="chart-span-6">{{ chart_card('Residual Plot', 'q2Residual', charts.residuals) }}</div>
+</div>
+
+<div class="row g-4 mt-2">
+    <div class="col-lg-6">
+        <div class="card-rounded">
+            <h3>Pearson & Spearman Correlations</h3>
+            <table class="data-table">
+                <thead><tr><th>Feature</th><th>Pearson r</th><th>Spearman r</th></tr></thead>
+                <tbody>
+                    {% for row in pairwise %}
+                    <tr><td>{{ row.feature }}</td><td>{{ row.pearson_r }}</td><td>{{ row.spearman_r }}</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="col-lg-6">
+        <div class="card-rounded">
+            <h3><i class="bi bi-calculator"></i> Prediction Simulator</h3>
+            <form method="post">
+                <div class="row g-3">
+                    <div class="col-4"><label class="form-label">Study Hours</label>
+                        <input type="number" name="study_hours" class="form-control" step="0.5" value="{{ form_data.study_hours if form_data else '18' }}" required></div>
+                    <div class="col-4"><label class="form-label">Attendance %</label>
+                        <input type="number" name="attendance" class="form-control" value="{{ form_data.attendance if form_data else '90' }}" required></div>
+                    <div class="col-4"><label class="form-label">Homework Score</label>
+                        <input type="number" name="homework_score" class="form-control" value="{{ form_data.homework_score if form_data else '75' }}" required></div>
+                </div>
+                <button type="submit" class="btn btn-primary mt-3 w-100">Predict Exam Score</button>
+            </form>
+            {% if prediction %}
+            <div class="prediction-result mt-3">
+                {% if prediction.error %}
+                <div class="alert alert-danger">{{ prediction.error }}</div>
+                {% else %}
+                <div class="predicted-score">{{ prediction.predicted_score }}<span>/100</span></div>
+                <p><strong>Reliability:</strong> {{ prediction.reliability }}</p>
+                {% for w in prediction.warnings %}
+                <div class="alert alert-warning small">{{ w }}</div>
+                {% endfor %}
+                {% endif %}
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="{{ url_for('static', filename='js/charts.js') }}"></script>
+{% endblock %}
