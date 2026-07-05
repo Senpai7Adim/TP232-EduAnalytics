@@ -1,7 +1,9 @@
-dataset/tyty_150.csv
-dataset
 reports/report_a_20260704_1445.pdf
 reports
 __pycache__
 data
 exports
+dataset/test_leader_120.csv
+dataset/toto_10.csv
+dataset/z_10.csv
+dataset/tyty_150.csv
