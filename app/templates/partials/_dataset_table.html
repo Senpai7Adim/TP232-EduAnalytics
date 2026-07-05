@@ -1,0 +1,35 @@
+<div class="table-responsive">
+    <table class="data-table data-table-sticky data-table-sortable" id="datasetPreviewTable"
+           data-page="{{ pagination.page }}" data-pages="{{ pagination.pages }}" data-total="{{ pagination.total }}">
+        <thead>
+            <tr>
+                {% for col in ['Student_ID','Study_Hours','Exam_Score','Attendance','Homework_Score','Orientation'] %}
+                <th data-sort="{{ col }}" class="{% if pagination.sort == col %}sorted-{{ pagination.order }}{% endif %}" scope="col">{{ col }}</th>
+                {% endfor %}
+            </tr>
+        </thead>
+        <tbody>
+            {% if preview %}
+                {% for row in preview %}
+                <tr>
+                    <td><code>{{ row.Student_ID }}</code></td>
+                    <td>{{ row.Study_Hours }}</td>
+                    <td><strong>{{ row.Exam_Score }}</strong></td>
+                    <td>{{ row.Attendance }}%</td>
+                    <td>{{ row.Homework_Score }}</td>
+                    <td><span class="badge-orientation {{ row.Orientation | lower }}">{{ row.Orientation }}</span></td>
+                </tr>
+                {% endfor %}
+            {% else %}
+                <tr><td colspan="6" class="text-center text-muted py-5">No dataset loaded. Generate or import data to begin.</td></tr>
+            {% endif %}
+        </tbody>
+    </table>
+</div>
+{% if pagination.total > 0 %}
+<nav class="table-pagination" aria-label="Dataset pagination">
+    <button type="button" class="btn btn-sm btn-outline-secondary" data-page-prev {% if pagination.page <= 1 %}disabled{% endif %}>Previous</button>
+    <span class="page-info">Page {{ pagination.page }} of {{ pagination.pages }} · {{ pagination.total }} records</span>
+    <button type="button" class="btn btn-sm btn-outline-secondary" data-page-next {% if pagination.page >= pagination.pages %}disabled{% endif %}>Next</button>
+</nav>
+{% endif %}

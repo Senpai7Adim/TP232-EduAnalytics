@@ -1,0 +1,52 @@
+{% from 'components/macros.html' import chart_card, page_header %}
+{{ page_header(t('q4_title'), 'Classification: Scientific vs Literary orientation') }}
+
+<div class="alert alert-info card-rounded mb-4">
+  <i class="bi bi-trophy-fill"></i> Best Model: <strong>{{ best_model_name }}</strong>
+  — Accuracy {{ best.accuracy }}, F1 {{ best.f1 }}
+</div>
+
+<div class="card-rounded mb-4">
+    <h3>Model Comparison</h3>
+    <div class="table-responsive">
+        <table class="data-table data-table-sticky">
+            <thead><tr><th>Model</th><th>Accuracy</th><th>Precision</th><th>Recall</th><th>F1</th><th>CV F1</th></tr></thead>
+            <tbody>
+                {% for row in comparison %}
+                <tr class="{% if row.is_best %}table-best{% endif %}">
+                    <td>{% if row.is_best %}<i class="bi bi-star-fill text-warning"></i> {% endif %}{{ row.model }}</td>
+                    <td>{{ row.accuracy }}</td><td>{{ row.precision }}</td>
+                    <td>{{ row.recall }}</td><td>{{ row.f1 }}</td><td>{{ row.cv_f1 }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="chart-grid">
+    <div class="chart-span-6">{{ chart_card('Model Metrics', 'q4Compare', charts.comparison) }}</div>
+    <div class="chart-span-6">{{ chart_card('Confusion Matrix', 'q4CM', charts.confusion) }}</div>
+    {% if charts.roc %}<div class="chart-span-6">{{ chart_card('ROC Curve', 'q4ROC', charts.roc) }}</div>{% endif %}
+    {% if charts.feature_importance %}<div class="chart-span-6">{{ chart_card('Feature Importance', 'q4FI', charts.feature_importance) }}</div>{% endif %}
+</div>
+
+<div class="row g-4 mt-2">
+    <div class="col-lg-6">
+        <div class="card-rounded">
+            <h3><i class="bi bi-magic"></i> Orientation Predictor</h3>
+            <form data-spa-form="predict-orientation">
+                <div class="row g-3">
+                    <div class="col-4"><label class="form-label">Study Hours</label>
+                        <input type="number" name="study_hours" class="form-control" value="18" required></div>
+                    <div class="col-4"><label class="form-label">Attendance %</label>
+                        <input type="number" name="attendance" class="form-control" value="90" required></div>
+                    <div class="col-4"><label class="form-label">Homework</label>
+                        <input type="number" name="homework_score" class="form-control" value="75" required></div>
+                </div>
+                <button type="submit" class="btn btn-primary mt-3 w-100">Predict Orientation</button>
+            </form>
+            <div id="orientationPredictionResult" class="orientation-result mt-4" aria-live="polite"></div>
+        </div>
+    </div>
+</div>

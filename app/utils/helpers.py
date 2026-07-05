@@ -6,7 +6,7 @@ from __future__ import annotations
 
 from functools import wraps
 
-from flask import current_app, flash, redirect, session, url_for
+from flask import current_app, flash, jsonify, redirect, request, session, url_for
 
 from app.services.classification_service import ClassificationService
 from app.services.clustering_service import ClusteringService
@@ -15,6 +15,7 @@ from app.services.data_manager import DataManager
 from app.services.descriptive_service import DescriptiveStatisticsService
 from app.services.regression_service import RegressionService
 from app.utils.i18n import get_language, t, translations_dict
+from app.utils.spa import is_api_request, json_error
 
 
 def get_data_manager() -> DataManager:
@@ -33,12 +34,14 @@ def random_state() -> int:
 
 
 def require_dataset(view_func):
-    """Decorator redirecting to dataset page when no data is loaded."""
+    """Decorator guarding routes that need a loaded dataset."""
 
     @wraps(view_func)
     def wrapper(*args, **kwargs):
         dm = get_data_manager()
         if not dm.has_dataset():
+            if is_api_request() or request.headers.get("X-Partial-Request") == "1":
+                return json_error(t("no_dataset"), 404, redirect="/dataset/")
             flash(t("no_dataset"), "warning")
             return redirect(url_for("dataset.index"))
         return view_func(*args, **kwargs)

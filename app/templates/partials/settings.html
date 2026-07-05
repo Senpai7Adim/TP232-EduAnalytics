@@ -1,0 +1,39 @@
+{% from 'components/macros.html' import page_header %}
+{{ page_header(t('settings_title'), 'Personalise your analytics experience') }}
+
+<div class="card-rounded settings-card">
+    <form data-spa-form="settings" id="settingsForm">
+        <div class="settings-group">
+            <label class="form-label">{{ t('theme') }}</label>
+            <div class="btn-group w-100" role="group" aria-label="Theme selection">
+                <input type="radio" class="btn-check" name="theme" id="themeLight" value="light" {% if current_theme == 'light' %}checked{% endif %}>
+                <label class="btn btn-outline-primary" for="themeLight"><i class="bi bi-sun"></i> {{ t('light') }}</label>
+                <input type="radio" class="btn-check" name="theme" id="themeDark" value="dark" {% if current_theme == 'dark' %}checked{% endif %}>
+                <label class="btn btn-outline-primary" for="themeDark"><i class="bi bi-moon"></i> {{ t('dark') }}</label>
+            </div>
+        </div>
+        <div class="settings-group">
+            <label class="form-label" for="languageSelect">{{ t('language') }}</label>
+            <select name="language" id="languageSelect" class="form-select">
+                <option value="en" {% if current_language == 'en' %}selected{% endif %}>{{ t('english') }}</option>
+                <option value="fr" {% if current_language == 'fr' %}selected{% endif %}>{{ t('french') }}</option>
+            </select>
+        </div>
+        <div class="settings-group">
+            <div class="form-check form-switch">
+                <input class="form-check-input" type="checkbox" name="animations" id="animationsToggle" {% if animations_enabled %}checked{% endif %}>
+                <label class="form-check-label" for="animationsToggle">{{ t('animations') }}</label>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary btn-lg w-100">{{ t('save_settings') }}</button>
+    </form>
+</div>
+
+<div class="card-rounded mt-4">
+    <h3>Keyboard Shortcuts</h3>
+    <table class="data-table">
+        <tr><td><kbd>Ctrl</kbd> + <kbd>K</kbd></td><td>Focus search</td></tr>
+        <tr><td><kbd>Ctrl</kbd> + <kbd>B</kbd></td><td>Toggle sidebar</td></tr>
+        <tr><td><kbd>Ctrl</kbd> + <kbd>D</kbd></td><td>Toggle dark mode</td></tr>
+    </table>
+</div>

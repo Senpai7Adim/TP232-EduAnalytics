@@ -1,0 +1,49 @@
+{% from 'components/macros.html' import kpi_card, chart_card, page_header %}
+{{ page_header(t('nav_dashboard'), app_subtitle) }}
+
+<div id="dashboard-kpis" class="kpi-grid">
+    {{ kpi_card(t('total_students'), kpis.total_students, icon='bi-people-fill') }}
+    {{ kpi_card(t('avg_exam'), kpis.avg_exam_score, suffix='/100', icon='bi-trophy-fill', color='success') }}
+    {{ kpi_card(t('avg_study'), kpis.avg_study_hours, suffix='h/wk', icon='bi-clock-fill', color='info') }}
+    {{ kpi_card(t('highest'), kpis.highest_score, icon='bi-arrow-up-circle-fill', color='success') }}
+    {{ kpi_card(t('lowest'), kpis.lowest_score, icon='bi-arrow-down-circle-fill', color='danger') }}
+    {{ kpi_card(t('scientific'), kpis.scientific_count, icon='bi-flask', color='primary') }}
+    {{ kpi_card(t('literary'), kpis.literary_count, icon='bi-book-fill', color='warning') }}
+    {{ kpi_card(t('accuracy'), kpis.prediction_accuracy, suffix='%', icon='bi-bullseye', color='info') }}
+</div>
+
+<div id="dashboard-charts" class="chart-grid mt-4">
+    <div class="chart-span-6">{{ chart_card('Study Hours Distribution', 'chartStudyHours', charts.study_hours_dist) }}</div>
+    <div class="chart-span-6">{{ chart_card('Exam Score Distribution', 'chartExamScore', charts.exam_score_dist) }}</div>
+    <div class="chart-span-4">{{ chart_card('Orientation', 'chartOrientation', charts.orientation_pie) }}</div>
+    <div class="chart-span-8">{{ chart_card('Weekly Trend', 'chartWeekly', charts.weekly_trend) }}</div>
+    <div class="chart-span-12">{{ chart_card('Correlation Heatmap', 'chartCorr', charts.correlation_heatmap) }}</div>
+</div>
+
+<div class="card-rounded mt-4">
+    <div class="card-header-flex">
+        <h3><i class="bi bi-table"></i> Recent Dataset Preview</h3>
+    </div>
+    <div class="table-responsive">
+        <table class="data-table data-table-sticky">
+            <thead>
+                <tr>
+                    <th>Student_ID</th><th>Study_Hours</th><th>Exam_Score</th>
+                    <th>Attendance</th><th>Homework_Score</th><th>Orientation</th>
+                </tr>
+            </thead>
+            <tbody id="dashboard-preview-body">
+                {% for row in preview %}
+                <tr>
+                    <td><code>{{ row.Student_ID }}</code></td>
+                    <td>{{ row.Study_Hours }}</td>
+                    <td><strong>{{ row.Exam_Score }}</strong></td>
+                    <td>{{ row.Attendance }}%</td>
+                    <td>{{ row.Homework_Score }}</td>
+                    <td><span class="badge-orientation {{ row.Orientation | lower }}">{{ row.Orientation }}</span></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>

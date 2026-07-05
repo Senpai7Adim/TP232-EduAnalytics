@@ -1,48 +1,51 @@
-<aside class="sidebar glass-panel" id="sidebar">
+<aside class="sidebar glass-panel" id="sidebar" role="navigation" aria-label="Main navigation">
     <div class="sidebar-header">
-        <div class="brand-logo"><i class="bi bi-mortarboard-fill"></i></div>
+        <div class="brand-logo" aria-hidden="true"><i class="bi bi-mortarboard-fill"></i></div>
         <div class="brand-info">
             <span class="brand-title">{{ app_name }}</span>
             <span class="brand-sub">{{ course_code }} · Theme {{ theme_label }}</span>
         </div>
-        <button class="sidebar-collapse-btn" id="sidebarCollapseBtn" aria-label="Collapse sidebar">
-            <i class="bi bi-chevron-left"></i>
+        <button class="sidebar-collapse-btn" id="sidebarCollapseBtn" aria-label="Collapse sidebar" aria-expanded="true">
+            <i class="bi bi-chevron-left" aria-hidden="true"></i>
         </button>
     </div>
-    <nav class="sidebar-nav">
-        <a href="{{ url_for('dashboard.index') }}" class="nav-item {% if request.endpoint == 'dashboard.index' %}active{% endif %}" title="{{ t('nav_dashboard') }}">
-            <i class="bi bi-grid-1x2-fill"></i><span>{{ t('nav_dashboard') }}</span>
-        </a>
-        <a href="{{ url_for('dataset.index') }}" class="nav-item {% if request.blueprint == 'dataset' %}active{% endif %}" title="{{ t('nav_dataset') }}">
-            <i class="bi bi-database-fill"></i><span>{{ t('nav_dataset') }}</span>
-        </a>
-        <div class="nav-divider"></div>
-        <a href="{{ url_for('q1.index') }}" class="nav-item {% if request.blueprint == 'q1' %}active{% endif %}" title="{{ t('nav_q1') }}">
-            <i class="bi bi-bar-chart-fill"></i><span>{{ t('nav_q1') }}</span>
-        </a>
-        <a href="{{ url_for('q2.index') }}" class="nav-item {% if request.blueprint == 'q2' %}active{% endif %}" title="{{ t('nav_q2') }}">
-            <i class="bi bi-graph-up-arrow"></i><span>{{ t('nav_q2') }}</span>
-        </a>
-        <a href="{{ url_for('q3.index') }}" class="nav-item {% if request.blueprint == 'q3' %}active{% endif %}" title="{{ t('nav_q3') }}">
-            <i class="bi bi-diagram-3-fill"></i><span>{{ t('nav_q3') }}</span>
-        </a>
-        <a href="{{ url_for('q4.index') }}" class="nav-item {% if request.blueprint == 'q4' %}active{% endif %}" title="{{ t('nav_q4') }}">
-            <i class="bi bi-cpu-fill"></i><span>{{ t('nav_q4') }}</span>
-        </a>
-        <div class="nav-divider"></div>
-        <a href="{{ url_for('reports.index') }}" class="nav-item {% if request.blueprint == 'reports' %}active{% endif %}" title="{{ t('nav_reports') }}">
-            <i class="bi bi-file-earmark-text-fill"></i><span>{{ t('nav_reports') }}</span>
-        </a>
-        <a href="{{ url_for('settings.index') }}" class="nav-item {% if request.blueprint == 'settings' %}active{% endif %}" title="{{ t('nav_settings') }}">
-            <i class="bi bi-gear-fill"></i><span>{{ t('nav_settings') }}</span>
-        </a>
-        <a href="{{ url_for('about.index') }}" class="nav-item {% if request.blueprint == 'about' %}active{% endif %}" title="{{ t('nav_about') }}">
-            <i class="bi bi-info-circle-fill"></i><span>{{ t('nav_about') }}</span>
-        </a>
+    <nav class="sidebar-nav" aria-label="Application sections">
+        <button class="nav-item" data-spa-nav="dashboard" title="{{ t('nav_dashboard') }}" aria-label="{{ t('nav_dashboard') }}">
+            <i class="bi bi-grid-1x2-fill" aria-hidden="true"></i><span>{{ t('nav_dashboard') }}</span>
+        </button>
+        <button class="nav-item" data-spa-nav="dataset" title="{{ t('nav_dataset') }}" aria-label="{{ t('nav_dataset') }}">
+            <i class="bi bi-database-fill" aria-hidden="true"></i><span>{{ t('nav_dataset') }}</span>
+        </button>
+        <div class="nav-divider" role="separator"></div>
+        <button class="nav-item" data-spa-nav="question-1" title="{{ t('nav_q1') }}" aria-label="{{ t('nav_q1') }}">
+            <i class="bi bi-bar-chart-fill" aria-hidden="true"></i><span>{{ t('nav_q1') }}</span>
+        </button>
+        <button class="nav-item" data-spa-nav="question-2" title="{{ t('nav_q2') }}" aria-label="{{ t('nav_q2') }}">
+            <i class="bi bi-graph-up-arrow" aria-hidden="true"></i><span>{{ t('nav_q2') }}</span>
+        </button>
+        <button class="nav-item" data-spa-nav="question-3" title="{{ t('nav_q3') }}" aria-label="{{ t('nav_q3') }}">
+            <i class="bi bi-diagram-3-fill" aria-hidden="true"></i><span>{{ t('nav_q3') }}</span>
+        </button>
+        <button class="nav-item" data-spa-nav="question-4" title="{{ t('nav_q4') }}" aria-label="{{ t('nav_q4') }}">
+            <i class="bi bi-cpu-fill" aria-hidden="true"></i><span>{{ t('nav_q4') }}</span>
+        </button>
+        <div class="nav-divider" role="separator"></div>
+        <button class="nav-item" data-spa-nav="reports" title="{{ t('nav_reports') }}" aria-label="{{ t('nav_reports') }}">
+            <i class="bi bi-file-earmark-text-fill" aria-hidden="true"></i><span>{{ t('nav_reports') }}</span>
+        </button>
+        <button class="nav-item" data-spa-nav="settings" title="{{ t('nav_settings') }}" aria-label="{{ t('nav_settings') }}">
+            <i class="bi bi-gear-fill" aria-hidden="true"></i><span>{{ t('nav_settings') }}</span>
+        </button>
+        <button class="nav-item" data-spa-nav="about" title="{{ t('nav_about') }}" aria-label="{{ t('nav_about') }}">
+            <i class="bi bi-info-circle-fill" aria-hidden="true"></i><span>{{ t('nav_about') }}</span>
+        </button>
     </nav>
     {% if has_dataset %}
-    <div class="sidebar-footer">
-        <div class="dataset-pill"><i class="bi bi-check-circle-fill"></i> {{ session_meta.num_students }} students</div>
+    <div class="sidebar-footer" id="sidebarFooter">
+        <div class="dataset-pill"><i class="bi bi-check-circle-fill" aria-hidden="true"></i> <span>{{ session_meta.num_students }} students</span></div>
     </div>
+    {% else %}
+    <div class="sidebar-footer" id="sidebarFooter"></div>
     {% endif %}
 </aside>
+<div class="sidebar-backdrop" id="sidebarBackdrop" aria-hidden="true"></div>

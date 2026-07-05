@@ -1,0 +1,53 @@
+{% from 'components/macros.html' import chart_card, page_header %}
+{{ page_header(t('q2_title'), 'Regression, correlation, and prediction simulator') }}
+
+<div class="card-rounded mb-4">
+    <h3>Regression Equation</h3>
+    <code class="equation-block">{{ regression.equation }}</code>
+    <div class="metric-row mt-3">
+        <span class="metric-pill">R² = {{ regression.r_squared }}</span>
+        <span class="metric-pill">Adj. R² = {{ regression.adjusted_r_squared }}</span>
+    </div>
+    <p class="mt-3">{{ explanation }}</p>
+</div>
+
+<div class="chart-grid">
+    <div class="chart-span-4">{{ chart_card('Study Hours vs Score', 'q2Scatter1', charts.scatter_study) }}</div>
+    <div class="chart-span-4">{{ chart_card('Attendance vs Score', 'q2Scatter2', charts.scatter_attendance) }}</div>
+    <div class="chart-span-4">{{ chart_card('Homework vs Score', 'q2Scatter3', charts.scatter_homework) }}</div>
+    <div class="chart-span-6">{{ chart_card('Correlation Matrix', 'q2Corr', charts.correlation) }}</div>
+    <div class="chart-span-6">{{ chart_card('Residual Plot', 'q2Residual', charts.residuals) }}</div>
+</div>
+
+<div class="row g-4 mt-2">
+    <div class="col-lg-6">
+        <div class="card-rounded">
+            <h3>Pearson & Spearman Correlations</h3>
+            <table class="data-table data-table-sticky">
+                <thead><tr><th>Feature</th><th>Pearson r</th><th>Spearman r</th></tr></thead>
+                <tbody>
+                    {% for row in pairwise %}
+                    <tr><td>{{ row.feature }}</td><td>{{ row.pearson_r }}</td><td>{{ row.spearman_r }}</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="col-lg-6">
+        <div class="card-rounded">
+            <h3><i class="bi bi-calculator"></i> Prediction Simulator</h3>
+            <form data-spa-form="predict-exam">
+                <div class="row g-3">
+                    <div class="col-4"><label class="form-label">Study Hours</label>
+                        <input type="number" name="study_hours" class="form-control" step="0.5" value="18" required></div>
+                    <div class="col-4"><label class="form-label">Attendance %</label>
+                        <input type="number" name="attendance" class="form-control" value="90" required></div>
+                    <div class="col-4"><label class="form-label">Homework Score</label>
+                        <input type="number" name="homework_score" class="form-control" value="75" required></div>
+                </div>
+                <button type="submit" class="btn btn-primary mt-3 w-100">Predict Exam Score</button>
+            </form>
+            <div id="examPredictionResult" class="prediction-result mt-3" aria-live="polite"></div>
+        </div>
+    </div>
+</div>

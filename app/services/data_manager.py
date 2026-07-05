@@ -128,6 +128,53 @@ class DataManager:
         """Return the first N records for dashboard preview."""
         return self.load().head(limit).to_dict(orient="records")
 
+    def preview_paginated(
+        self,
+        page: int = 1,
+        per_page: int = 15,
+        search: str = "",
+        sort: str = "Student_ID",
+        order: str = "asc",
+    ) -> dict:
+        """Paginated, searchable, sortable dataset preview."""
+        df = self.load()
+        allowed_sort = {
+            "Student_ID",
+            "Study_Hours",
+            "Exam_Score",
+            "Attendance",
+            "Homework_Score",
+            "Orientation",
+        }
+        if sort not in allowed_sort:
+            sort = "Student_ID"
+        order = "desc" if order.lower() == "desc" else "asc"
+
+        if search:
+            mask = (
+                df["Student_ID"].str.contains(search, case=False, na=False)
+                | df["Orientation"].str.contains(search, case=False, na=False)
+            )
+            df = df[mask]
+
+        df = df.sort_values(sort, ascending=(order == "asc"))
+        total = len(df)
+        pages = max(1, (total + per_page - 1) // per_page)
+        page = max(1, min(page, pages))
+        start = (page - 1) * per_page
+        rows = df.iloc[start : start + per_page].to_dict(orient="records")
+
+        return {
+            "rows": rows,
+            "total": total,
+            "page": page,
+            "pages": pages,
+            "per_page": per_page,
+            "sort": sort,
+            "order": order,
+            "search": search,
+        }
+
     def summary(self) -> dict:
         """High-level dataset summary statistics."""
         df = self.load()

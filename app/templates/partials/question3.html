@@ -1,0 +1,45 @@
+{% from 'components/macros.html' import chart_card, page_header %}
+{{ page_header(t('q3_title'), 'K-Means clustering with elbow & silhouette analysis') }}
+
+<div class="metric-row mb-4 align-items-center">
+    <span class="metric-pill">Optimal K = {{ result.optimal_k }}</span>
+    <span class="metric-pill">Active K = {{ result.n_clusters }}</span>
+    <span class="metric-pill">Silhouette = {{ result.silhouette }}</span>
+    <span class="metric-pill">Inertia = {{ result.inertia }}</span>
+    <div class="ms-auto d-flex align-items-center gap-2">
+        <label for="clusterKSelect" class="form-label mb-0 small">Clusters:</label>
+        <select id="clusterKSelect" class="form-select form-select-sm" data-spa-action="q3-clusters" style="width:auto">
+            {% for k in range(2, 9) %}
+            <option value="{{ k }}" {% if result.n_clusters == k %}selected{% endif %}>{{ k }}</option>
+            {% endfor %}
+        </select>
+    </div>
+</div>
+
+<div id="q3-charts" class="chart-grid">
+    <div class="chart-span-6">{{ chart_card('Elbow Method', 'q3Elbow', charts.elbow) }}</div>
+    <div class="chart-span-6">{{ chart_card('Silhouette Score', 'q3Sil', charts.silhouette) }}</div>
+    <div class="chart-span-8">{{ chart_card('Cluster Visualization', 'q3Cluster', charts.clusters) }}</div>
+    <div class="chart-span-4">{{ chart_card('Cluster Radar', 'q3Radar', charts.radar) }}</div>
+</div>
+
+<div id="q3-profiles" class="cluster-grid mt-4">
+    {% for profile in result.profiles %}
+    <div class="cluster-card card-rounded">
+        <div class="cluster-card-header">
+            <span class="cluster-num">Cluster {{ profile.cluster }}</span>
+            <span class="cluster-label">{{ profile.label }}</span>
+        </div>
+        <p>{{ profile.description }}</p>
+        <div class="cluster-stats">
+            <div><span>Size</span><strong>{{ profile.size }} ({{ profile.percentage }}%)</strong></div>
+            <div><span>Avg Score</span><strong>{{ profile.avg_exam_score }}</strong></div>
+            <div><span>Attendance</span><strong>{{ profile.avg_attendance }}%</strong></div>
+            <div><span>Study Hours</span><strong>{{ profile.avg_study_hours }}h</strong></div>
+        </div>
+        <div class="recommendation-box mt-3">
+            <i class="bi bi-lightbulb"></i> {{ result.recommendations[loop.index0] }}
+        </div>
+    </div>
+    {% endfor %}
+</div>
