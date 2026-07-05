@@ -17,10 +17,36 @@ from app.services.regression_service import RegressionService
 from app.utils.i18n import get_language, t, translations_dict
 from app.utils.spa import is_api_request, json_error
 
+# Session-scoped service cache to avoid recomputing on every page load
+_service_cache: dict = {}
+
+
+def _cache_key(service_type: str) -> str:
+    """Generate a cache key for the current dataset and seed."""
+    dataset_path = session.get("dataset_path", "")
+    seed = session.get("dataset_seed", 0)
+    return f"{service_type}:{dataset_path}:{seed}"
+
+
+def _get_cached_service(
+    service_type: str, factory_func
+) -> DashboardService | DescriptiveStatisticsService | RegressionService | ClusteringService | ClassificationService:
+    """Get or create a cached service instance."""
+    key = _cache_key(service_type)
+    if key not in _service_cache:
+        _service_cache[key] = factory_func()
+    return _service_cache[key]
+
 
 def get_data_manager() -> DataManager:
     """Return the application DataManager extension."""
     return current_app.extensions["data_manager"]
+
+
+def clear_service_cache() -> None:
+    """Clear all cached services when dataset changes."""
+    global _service_cache
+    _service_cache.clear()
 
 
 def chart_colors() -> list[str]:
@@ -51,23 +77,40 @@ def require_dataset(view_func):
 
 def get_dashboard_service() -> DashboardService:
     dm = get_data_manager()
-    return DashboardService(dm.load(), chart_colors(), random_state())
+    return _get_cached_service(
+        "dashboard",
+        lambda: DashboardService(dm.load(), chart_colors(), random_state()),
+    )
 
 
 def get_descriptive_service() -> DescriptiveStatisticsService:
-    return DescriptiveStatisticsService(get_data_manager().load())
+    return _get_cached_service(
+        "descriptive",
+        lambda: DescriptiveStatisticsService(get_data_manager().load()),
+    )
 
 
 def get_regression_service() -> RegressionService:
-    return RegressionService(get_data_manager().load())
+    return _get_cached_service(
+        "regression",
+        lambda: RegressionService(get_data_manager().load()),
+    )
 
 
 def get_clustering_service() -> ClusteringService:
-    return ClusteringService(get_data_manager().load(), random_state())
+    return _get_cached_service(
+        "clustering",
+        lambda: ClusteringService(get_data_manager().load(), random_state()),
+    )
 
 
 def get_classification_service() -> ClassificationService:
-    return ClassificationService(get_data_manager().load(), random_state=random_state())
+    return _get_cached_service(
+        "classification",
+        lambda: ClassificationService(
+            get_data_manager().load(), random_state=random_state()
+        ),
+    )
 
 
 def user_settings() -> dict:

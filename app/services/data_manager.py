@@ -49,6 +49,8 @@ class DataManager:
         num_students: int,
     ) -> pd.DataFrame:
         """Generate a new dataset and store session metadata."""
+        from app.utils.helpers import clear_service_cache
+        
         df, path, seed = generate_and_save(
             leader_name,
             int(num_students),
@@ -59,10 +61,13 @@ class DataManager:
         session["dataset_path"] = str(path)
         session["dataset_seed"] = seed
         self._load_cached.cache_clear()
+        clear_service_cache()
         return df
 
     def import_csv(self, file_storage) -> pd.DataFrame:
         """Import an external CSV file after schema validation."""
+        from app.utils.helpers import clear_service_cache
+        
         df = pd.read_csv(file_storage)
         required = {
             "Student_ID",
@@ -99,6 +104,7 @@ class DataManager:
         session["dataset_path"] = str(path)
         session["dataset_seed"] = 0
         self._load_cached.cache_clear()
+        clear_service_cache()
         return df
 
     def load(self) -> pd.DataFrame:

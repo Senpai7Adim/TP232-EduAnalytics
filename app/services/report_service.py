@@ -241,6 +241,7 @@ class ReportService:
         reports and presentations.
         """
         import plotly.io as pio
+        import time
 
         output_path.parent.mkdir(parents=True, exist_ok=True)
         reg = RegressionService(self.df)
@@ -313,7 +314,37 @@ class ReportService:
         with zipfile.ZipFile(output_path, "w", zipfile.ZIP_DEFLATED) as archive:
             for filename, fig_json in chart_builders:
                 fig = pio.from_json(fig_json)
-                png_bytes = pio.to_image(fig, format="png", width=1200, height=700, scale=2)
-                archive.writestr(filename, png_bytes)
+                
+                # Retry logic for Kaleido browser issues
+                png_bytes = None
+                for attempt in range(3):
+                    try:
+                        # Use a longer timeout and pass engine_kwargs for more reliable behavior
+                        png_bytes = pio.to_image(
+                            fig, 
+                            format="png", 
+                            width=1200, 
+                            height=700, 
+                            scale=2,
+                            engine="kaleido"
+                        )
+                        break  # Success
+                    except Exception as e:
+                        if attempt < 2:  # Not the last attempt
+                            print(f"Chart export attempt {attempt + 1} failed for {filename}, retrying...")
+                            time.sleep(1)  # Wait before retry
+                        else:
+                            # Last attempt failed, raise error
+                            raise RuntimeError(
+                                f"Failed to export chart {filename} after 3 attempts. "
+                                f"This is a Kaleido/Chrome issue. Try:\n"
+                                f"1. Run: pip install --upgrade kaleido\n"
+                                f"2. Restart your application\n"
+                                f"3. Or run: python -m pip install choreographer && choreo_get_chrome\n"
+                                f"Original error: {str(e)}"
+                            ) from e
+                
+                if png_bytes:
+                    archive.writestr(filename, png_bytes)
 
         return output_path
