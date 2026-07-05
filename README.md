@@ -18,7 +18,7 @@ Ce projet est une application web d'analyse de données éducatives conçue pour
     *  MBEGAEYEMETERuth
     *  MELONGTSAWARosvel
     *  NGUEAGHOKRYSDeHugo
-    *  IFOUFOPAAnge
+    *  IFOU FOPA Ange
 *   **Nom du Chef de Groupe (graine) :** `KANA DJOWALE DUREL BRIGHT LIENOU KAMGANG STEPHY LAURE`
 *   **Graine Numérique Générée (SHA-256) :** `3857731347` (reproductible, dérivée de la conversion déterministe du nom)
 *   **Taille de la Cohorte Générée :** 250 élèves
